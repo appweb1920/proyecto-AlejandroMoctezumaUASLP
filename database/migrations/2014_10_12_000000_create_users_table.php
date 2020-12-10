@@ -22,7 +22,6 @@ class CreateUsersTable extends Migration
             $table->string('type');
             $table->string('nombre');
             $table->string('apellidos');
-            $table->foreignId('idPais')->constrained('paises');
             $table->rememberToken();
             $table->timestamps();
         });
