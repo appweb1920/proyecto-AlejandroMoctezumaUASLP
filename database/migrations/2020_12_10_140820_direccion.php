@@ -13,14 +13,14 @@ class Direccion extends Migration
      */
     public function up()
     {
-        Schema::create('direccion', function (Blueprint $table) {
+        Schema::create('direcciones', function (Blueprint $table) {
             $table->id();
             $table->string('calle', 100);
             $table->string('numero', 100);
             $table->string('ciudad', 100);
             $table->string('estado', 100);
             $table->string('codigoPostal', 100);
-            $table->foreignId('idPais')->constrained('pais');
+            $table->foreignId('idPais')->constrained('paises');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -33,6 +33,6 @@ class Direccion extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('direccion');
+        Schema::dropIfExists('direcciones');
     }
 }

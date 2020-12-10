@@ -13,12 +13,12 @@ class DiaReserva extends Migration
      */
     public function up()
     {
-        Schema::create('diaReserva', function (Blueprint $table) {
+        Schema::create('diaReservas', function (Blueprint $table) {
             $table->id();
             $table->date('dia');
             $table->foreignId('idUsuario')->constrained('users');
-            $table->foreignId('idHabitacion')->constrained('habitacion');
-            $table->foreignId('idReserva')->constrained('reserva');
+            $table->foreignId('idHabitacion')->constrained('habitaciones');
+            $table->foreignId('idReserva')->constrained('reservas');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -31,6 +31,6 @@ class DiaReserva extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('diaReserva');
+        Schema::dropIfExists('diaReservas');
     }
 }

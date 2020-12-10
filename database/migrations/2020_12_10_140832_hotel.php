@@ -13,13 +13,13 @@ class Hotel extends Migration
      */
     public function up()
     {
-        Schema::create('hotel', function (Blueprint $table) {
+        Schema::create('hoteles', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 100);
             $table->integer('estrellas');
             $table->string('horaCheckIn', 100);
             $table->string('horaCheckOut', 100);
-            $table->foreignId('idDireccion')->constrained('direccion');
+            $table->foreignId('idDireccion')->constrained('direcciones');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -32,6 +32,6 @@ class Hotel extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hotel');
+        Schema::dropIfExists('hoteles');
     }
 }

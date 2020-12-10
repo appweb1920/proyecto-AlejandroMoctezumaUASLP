@@ -13,11 +13,11 @@ class Habitacion extends Migration
      */
     public function up()
     {
-        Schema::create('habitacion', function (Blueprint $table) {
+        Schema::create('habitaciones', function (Blueprint $table) {
             $table->id();
             $table->double('precio',8,2);
-            $table->foreignId('idTipoHabitacion')->constrained('tipoHabitacion');
-            $table->foreignId('idHotel')->constrained('hotel');
+            $table->foreignId('idTipoHabitacion')->constrained('tipoHabitaciones');
+            $table->foreignId('idHotel')->constrained('hoteles');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -30,6 +30,6 @@ class Habitacion extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('habitacion');
+        Schema::dropIfExists('habitaciones');
     }
 }

@@ -15,7 +15,7 @@ class CarritoHabitaciones extends Migration
     {
         Schema::create('carritoHabitaciones', function (Blueprint $table) {
             $table->foreignId('idUsuario')->constrained('users');
-            $table->foreignId('idHabitacion')->constrained('habitacion');
+            $table->foreignId('idHabitacion')->constrained('habitaciones');
             $table->softDeletes();
             $table->timestamps();
         });

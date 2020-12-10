@@ -13,10 +13,13 @@ class TipoHabitacion extends Migration
      */
     public function up()
     {
-        Schema::create('tipoHabitacion', function (Blueprint $table) {
+        Schema::create('tipoHabitaciones', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 100);
             $table->string('caracteristicas', 200);
+            $table->string('imagen01', 100);
+            $table->string('imagen02', 100);
+            $table->string('imagen03', 100);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -29,6 +32,6 @@ class TipoHabitacion extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tipoHabitacion');
+        Schema::dropIfExists('tipoHabitaciones');
     }
 }

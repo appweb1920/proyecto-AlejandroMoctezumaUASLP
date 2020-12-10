@@ -13,7 +13,7 @@ class Reserva extends Migration
      */
     public function up()
     {
-        Schema::create('reserva', function (Blueprint $table) {
+        Schema::create('reservas', function (Blueprint $table) {
             $table->id();
             $table->date('checkIn');
             $table->date('checkOut');
@@ -36,6 +36,6 @@ class Reserva extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reserva');
+        Schema::dropIfExists('reservas');
     }
 }
