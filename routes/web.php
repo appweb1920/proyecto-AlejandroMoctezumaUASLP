@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 // Otros
 Auth::routes();
 Route::get('/','HomeController@portada');
+Route::get('/home','HomeController@portada');
 // -----------------------------------------------------------------------
 
 // -----------------------------------------------------------------------

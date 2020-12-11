@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use Illuminate\Http\Request;
+
+use DB;
 use App\Models\carritoHabitacion;
+use Illuminate\Support\Facades\Auth;
 
 class carritoHabitaciones extends Controller
 {

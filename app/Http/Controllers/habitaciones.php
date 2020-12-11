@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use Illuminate\Http\Request;
+
+use DB;
 use App\Models\habitacion;
+use Illuminate\Support\Facades\Auth;
 
 class habitaciones extends Controller
 {
@@ -15,7 +17,7 @@ class habitaciones extends Controller
      */
     public function index()
     {
-        if (Auth::user()->rol == "Administrador")
+        if (Auth::user()->rol == "Administrador" || Auth::user()->rol == "Usuario")
         {
             $d = habitacion::all();
             return view('VistasHabitaciones.muestraHabitaciones')->with('habitaciones',$d);
