@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use DB;
 use App\Models\direccion;
+use App\Models\pais;
 use Illuminate\Support\Facades\Auth;
 
 class direcciones extends Controller
@@ -19,7 +20,19 @@ class direcciones extends Controller
     {
         if (Auth::user()->rol == "Administrador")
         {
-            $d = direccion::all();
+            $d = DB::table('direcciones')
+            ->join('paises', 'paises.id', '=', 'direcciones.idPais')
+            ->select(
+                'direcciones.id',
+                'direcciones.calle',
+                'direcciones.numero',
+                'direcciones.codigoPostal',
+                'direcciones.ciudad',
+                'direcciones.estado',
+                'paises.nombre'
+            )
+            ->where('direcciones.deleted_at','=',null)
+            ->get();
             return view('VistasDirecciones.muestraDirecciones')->with('direcciones',$d);
         }
         else
@@ -34,7 +47,10 @@ class direcciones extends Controller
     public function create()
     {
         if (Auth::user()->rol == "Administrador")
-            return view('VistasDirecciones.creaDireccion');
+        {
+            $d = pais::all();
+            return view('VistasDirecciones.creaDireccion')->with('paises',$d);
+        }
         else
             return redirect('/');
         
@@ -74,8 +90,29 @@ class direcciones extends Controller
     {
         if (Auth::user()->rol == "Administrador")
         {
-            $dato = direccion::find($id);
-            return view('VistasDirecciones.editaDireccion')->with('direccion',$dato);
+            $d = DB::table('direcciones')
+            ->join('paises', 'paises.id', '=', 'direcciones.idPais')
+            ->select(
+                'direcciones.id',
+                'direcciones.calle',
+                'direcciones.numero',
+                'direcciones.codigoPostal',
+                'direcciones.ciudad',
+                'direcciones.estado',
+                'paises.nombre'
+            )
+            ->where('direcciones.id','=',$id)
+            ->get();
+            $r = DB::table('paises')
+            ->select(
+                'paises.id',
+                'paises.nombre'
+            )
+            ->get();
+            //return dd($d,$r);
+            return view('VistasDirecciones.editaDireccion')
+            ->with('direccion',$d)
+            ->with('paises',$r);
         }
         else
             return redirect('/');
