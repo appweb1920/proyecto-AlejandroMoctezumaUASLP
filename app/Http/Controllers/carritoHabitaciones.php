@@ -16,7 +16,7 @@ class carritoHabitaciones extends Controller
     public function index()
     {
         $d = carritoHabitacion::all();
-        return view('Vistas.muestraCarrito')->with('carrito',$d);
+        return view('VistasCarrito.muestraCarrito')->with('carrito',$d);
     }
 
     /**

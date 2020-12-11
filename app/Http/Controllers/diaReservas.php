@@ -18,7 +18,7 @@ class diaReservas extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $d = diaReserva::all();
-            return view('Vistas.muestraReservas')->with('reservas',$d);
+            return view('VistasDiasReservas.muestraReservas')->with('reservas',$d);
         }
         else
             return redirect('/');

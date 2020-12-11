@@ -18,14 +18,14 @@ class reservas extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $d = reserva::all();
-            return view('Vistas.muestraReservas')->with('reservas',$d);
+            return view('VistasReservas.muestraReservas')->with('reservas',$d);
         }
         else if (Auth::user()->rol == "Usuario")
         {
             $d = DB::table('reservas')
             ->where('idUsuario','=',Auth::id())
             ->get();
-            return view('Vistas.muestraReservas')->with('reservas',$d);
+            return view('VistasReservas.muestraReservas')->with('reservas',$d);
         }
         else
             return redirect('/');
@@ -39,7 +39,7 @@ class reservas extends Controller
     public function create()
     {   
         if (Auth::user()->rol == "Administrador" || Auth::user()->rol == "Usuario" )
-            return view('Vistas.creaReserva');
+            return view('VistasReservas.creaReserva');
         else
             return redirect('/');
     }
@@ -83,13 +83,13 @@ class reservas extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $dato = reserva::find($id);
-            return view('Vistas.muestraReserva')->with('reserva',$dato);
+            return view('VistasReservas.muestraReserva')->with('reserva',$dato);
         }
         else if (Auth::user()->rol == "Usuario")
         {
             $dato = reserva::find($id);
             if ($dato->idUsuario == Auth::id())
-                return view('Vistas.muestraReserva')->with('reserva',$dato);
+                return view('VistasReservas.muestraReserva')->with('reserva',$dato);
             else
                 return redirect('/');
         }
@@ -108,7 +108,7 @@ class reservas extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $dato = reserva::find($id);
-            return view('Vistas.editaReserva')->with('reserva',$dato);
+            return view('VistasReservas.editaReserva')->with('reserva',$dato);
         }
         else
             return redirect('/');

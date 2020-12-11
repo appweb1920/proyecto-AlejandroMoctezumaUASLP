@@ -18,7 +18,7 @@ class paises extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $d = pais::all();
-            return view('Vistas.muestraPaises')->with('paises',$d);
+            return view('VistasPaises.muestraPaises')->with('paises',$d);
         }
         else
             return redirect('/');
@@ -32,7 +32,7 @@ class paises extends Controller
     public function create()
     {
         if (Auth::user()->rol == "Administrador")
-            return view('Vistas.creaPais');
+            return view('VistasPaises.creaPais');
         else
             return redirect('/');
     }
@@ -67,7 +67,7 @@ class paises extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $dato = pais::find($id);
-            return view('Vistas.editaPais')->with('pais',$dato);
+            return view('VistasPaises.editaPais')->with('pais',$dato);
         }
         else
             return redirect('/');

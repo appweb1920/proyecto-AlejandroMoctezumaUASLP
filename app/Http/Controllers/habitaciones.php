@@ -18,7 +18,7 @@ class habitaciones extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $d = habitacion::all();
-            return view('Vistas.muestraHabitaciones')->with('habitaciones',$d);
+            return view('VistasHabitaciones.muestraHabitaciones')->with('habitaciones',$d);
         }
         else
             return redirect('/');
@@ -32,7 +32,7 @@ class habitaciones extends Controller
     public function create()
     {
         if (Auth::user()->rol == "Administrador")
-            return view('Vistas.creaHabitacion');
+            return view('VistasHabitaciones.creaHabitacion');
         else
             return redirect('/');
         
@@ -70,7 +70,7 @@ class habitaciones extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $dato = habitacion::find($id);
-            return view('Vistas.editaHabitacion')->with('habitacion',$dato);
+            return view('VistasHabitaciones.editaHabitacion')->with('habitacion',$dato);
         }
         else
             return redirect('/');

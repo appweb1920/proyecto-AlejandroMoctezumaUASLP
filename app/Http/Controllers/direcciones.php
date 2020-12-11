@@ -18,7 +18,7 @@ class direcciones extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $d = direccion::all();
-            return view('Vistas.muestraDirecciones')->with('direcciones',$d);
+            return view('VistasDirecciones.muestraDirecciones')->with('direcciones',$d);
         }
         else
             return redirect('/');
@@ -32,7 +32,7 @@ class direcciones extends Controller
     public function create()
     {
         if (Auth::user()->rol == "Administrador")
-            return view('Vistas.creaDireccion');
+            return view('VistasDirecciones.creaDireccion');
         else
             return redirect('/');
         
@@ -73,7 +73,7 @@ class direcciones extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $dato = direccion::find($id);
-            return view('Vistas.editaDireccion')->with('direccion',$dato);
+            return view('VistasDirecciones.editaDireccion')->with('direccion',$dato);
         }
         else
             return redirect('/');

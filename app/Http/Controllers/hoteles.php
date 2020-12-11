@@ -18,7 +18,7 @@ class hoteles extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $d = hotel::all();
-            return view('Vistas.muestraHoteles')->with('hoteles',$d);
+            return view('VistasHoteles.muestraHoteles')->with('hoteles',$d);
         }
         else
             return redirect('/');
@@ -32,7 +32,7 @@ class hoteles extends Controller
     public function create()
     {
         if (Auth::user()->rol == "Administrador")
-            return view('Vistas.creaHotel');
+            return view('VistasHoteles.creaHotel');
         else
             return redirect('/');
     }
@@ -71,7 +71,7 @@ class hoteles extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $dato = hotel::find($id);
-            return view('Vistas.editaHotel')->with('hotel',$dato);
+            return view('VistasHoteles.editaHotel')->with('hotel',$dato);
         }
         else
             return redirect('/');

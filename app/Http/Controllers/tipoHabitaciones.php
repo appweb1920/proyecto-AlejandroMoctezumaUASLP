@@ -18,7 +18,7 @@ class tipoHabitaciones extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $d = tipoHabitacion::all();
-            return view('Vistas.muestraTipoHabitaciones')->with('tipoHabitaciones',$d);
+            return view('VistasTipoHabitaciones.muestraTipoHabitaciones')->with('tipoHabitaciones',$d);
         }
         else
             return redirect('/');
@@ -32,7 +32,7 @@ class tipoHabitaciones extends Controller
     public function create()
     {
         if (Auth::user()->rol == "Administrador")
-            return view('Vistas.creaTipoHabitacion');
+            return view('VistasTipoHabitaciones.creaTipoHabitacion');
         else
             return redirect('/');
     }
@@ -71,7 +71,7 @@ class tipoHabitaciones extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $dato = tipoHabitacion::find($id);
-            return view('Vistas.editaTipoHabitacion')->with('tipoHabitacion',$dato);
+            return view('VistasTipoHabitaciones.editaTipoHabitacion')->with('tipoHabitacion',$dato);
         }
         else
             return redirect('/');
