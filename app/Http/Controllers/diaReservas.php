@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
+use App\Models\diaReserva;
 
 class diaReservas extends Controller
 {
@@ -13,7 +15,13 @@ class diaReservas extends Controller
      */
     public function index()
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $d = diaReserva::all();
+            return view('Vistas.muestraReservas')->with('reservas',$d);
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -24,7 +32,18 @@ class diaReservas extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (Auth::user()->rol == "Administrador" || Auth::user()->rol == "Usuario" )
+        {
+            $dato = new diaReserva;
+            $dato->dia = $request->dia;
+            $dato->idUsuario = $request->idUsuario;
+            $dato->idHabitacion = $request->idHabitacion;
+            $dato->idReserva = $request->idReserva;
+            $dato->save();
+            return redirect('/reservas');
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -35,6 +54,13 @@ class diaReservas extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = diaReserva::find($id);
+            $dato->delete();
+            return redirect('/reservas');
+        }
+        else
+            return redirect('/');
     }
 }

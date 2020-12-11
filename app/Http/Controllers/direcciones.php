@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
+use App\Models\direccion;
 
 class direcciones extends Controller
 {
@@ -13,7 +15,13 @@ class direcciones extends Controller
      */
     public function index()
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $d = direccion::all();
+            return view('Vistas.muestraDirecciones')->with('direcciones',$d);
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -23,7 +31,11 @@ class direcciones extends Controller
      */
     public function create()
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+            return view('Vistas.creaDireccion');
+        else
+            return redirect('/');
+        
     }
 
     /**
@@ -34,7 +46,20 @@ class direcciones extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = new direccion;
+            $dato->calle = $request->calle;
+            $dato->numero = $request->numero;
+            $dato->ciudad = $request->ciudad;
+            $dato->estado = $request->estado;
+            $dato->codigoPostal = $request->codigoPostal;
+            $dato->idPais = $request->idPais;
+            $dato->save();
+            return redirect('/direcciones');
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -45,7 +70,13 @@ class direcciones extends Controller
      */
     public function edit($id)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = direccion::find($id);
+            return view('Vistas.editaDireccion')->with('direccion',$dato);
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -57,7 +88,23 @@ class direcciones extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = direccion::find($id);
+            if(!is_null($dato))
+            {
+                $dato->calle = $request->calle;
+                $dato->numero = $request->numero;
+                $dato->ciudad = $request->ciudad;
+                $dato->estado = $request->estado;
+                $dato->codigoPostal = $request->codigoPostal;
+                $dato->idPais = $request->idPais;
+                $dato->save();
+            }
+            return redirect('/direcciones');
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -68,6 +115,13 @@ class direcciones extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = direccion::find($id);
+            $dato->delete();
+            return redirect('/direcciones');
+        }
+        else
+            return redirect('/');
     }
 }

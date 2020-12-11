@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
+use App\Models\reserva;
 
 class reservas extends Controller
 {
@@ -13,7 +15,20 @@ class reservas extends Controller
      */
     public function index()
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $d = reserva::all();
+            return view('Vistas.muestraReservas')->with('reservas',$d);
+        }
+        else if (Auth::user()->rol == "Usuario")
+        {
+            $d = DB::table('reservas')
+            ->where('idUsuario','=',Auth::id())
+            ->get();
+            return view('Vistas.muestraReservas')->with('reservas',$d);
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -22,8 +37,11 @@ class reservas extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        //
+    {   
+        if (Auth::user()->rol == "Administrador" || Auth::user()->rol == "Usuario" )
+            return view('Vistas.creaReserva');
+        else
+            return redirect('/');
     }
 
     /**
@@ -34,7 +52,24 @@ class reservas extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (Auth::user()->rol == "Administrador" || Auth::user()->rol == "Usuario" )
+        {
+            $dato = new reserva;
+            $dato->checkIn = $request->checkIn;
+            $dato->checkOut = $request->checkOut;
+            $dato->total = $request->total;
+            $dato->pago = $request->pago;
+            $dato->usuarioEsTitular = $request->usuarioEsTitular;
+            $dato->nombreTitular = $request->nombreTitular;
+            $dato->apellidosTitular = $request->apellidosTitular;
+            $dato->peticiones = $request->peticiones;
+            $dato->idUsuario = $request->idUsuario;
+            $dato->save();
+            return redirect('/reservaConfirmada');
+        }
+        else
+            return redirect('/');
+        
     }
 
     /**
@@ -45,7 +80,21 @@ class reservas extends Controller
      */
     public function show($id)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = reserva::find($id);
+            return view('Vistas.muestraReserva')->with('reserva',$dato);
+        }
+        else if (Auth::user()->rol == "Usuario")
+        {
+            $dato = reserva::find($id);
+            if ($dato->idUsuario == Auth::id())
+                return view('Vistas.muestraReserva')->with('reserva',$dato);
+            else
+                return redirect('/');
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -56,7 +105,13 @@ class reservas extends Controller
      */
     public function edit($id)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = reserva::find($id);
+            return view('Vistas.editaReserva')->with('reserva',$dato);
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -68,6 +123,43 @@ class reservas extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = reserva::find($id);
+            if(!is_null($dato))
+            {
+                $dato->checkIn = $request->checkIn;
+                $dato->checkOut = $request->checkOut;
+                $dato->total = $request->total;
+                $dato->pago = $request->pago;
+                $dato->usuarioEsTitular = $request->usuarioEsTitular;
+                $dato->nombreTitular = $request->nombreTitular;
+                $dato->apellidosTitular = $request->apellidosTitular;
+                $dato->peticiones = $request->peticiones;
+                $dato->idUsuario = $request->idUsuario;
+                $dato->save();
+            }
+            return redirect('/reservas');
+        }
+        else
+            return redirect('/');
+    }
+    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = reserva::find($id);
+            $dato->delete();
+            return redirect('/reservas');
+        }
+        else
+            return redirect('/');
     }
 }

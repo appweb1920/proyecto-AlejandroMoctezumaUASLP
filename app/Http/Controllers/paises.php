@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
+use App\Models\pais;
 
 class paises extends Controller
 {
@@ -13,7 +15,13 @@ class paises extends Controller
      */
     public function index()
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $d = pais::all();
+            return view('Vistas.muestraPaises')->with('paises',$d);
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -23,7 +31,10 @@ class paises extends Controller
      */
     public function create()
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+            return view('Vistas.creaPais');
+        else
+            return redirect('/');
     }
 
     /**
@@ -34,7 +45,15 @@ class paises extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = new pais;
+            $dato->nombre = $request->nombre;
+            $dato->save();
+            return redirect('/paises');
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -44,8 +63,14 @@ class paises extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        //
+    {   
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = pais::find($id);
+            return view('Vistas.editaPais')->with('pais',$dato);
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -56,8 +81,19 @@ class paises extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        //
+    {   
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = pais::find($id);
+            if(!is_null($dato))
+            {
+                $dato->nombre = $request->nombre;
+                $dato->save();
+            }
+            return redirect('/paises');
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -67,7 +103,14 @@ class paises extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {   
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = pais::find($id);
+            $dato->delete();
+            return redirect('/paises');
+        }
+        else
+            return redirect('/');
     }
 }

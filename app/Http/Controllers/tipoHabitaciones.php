@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
+use App\Models\tipoHabitacion;
 
 class tipoHabitaciones extends Controller
 {
@@ -12,8 +14,14 @@ class tipoHabitaciones extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
+    {   
+        if (Auth::user()->rol == "Administrador")
+        {
+            $d = tipoHabitacion::all();
+            return view('Vistas.muestraTipoHabitaciones')->with('tipoHabitaciones',$d);
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -23,7 +31,10 @@ class tipoHabitaciones extends Controller
      */
     public function create()
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+            return view('Vistas.creaTipoHabitacion');
+        else
+            return redirect('/');
     }
 
     /**
@@ -34,7 +45,19 @@ class tipoHabitaciones extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = new tipoHabitacion;
+            $dato->nombre = $request->nombre;
+            $dato->caracteristicas = $request->caracteristicas;
+            $dato->imagen01 = $request->imagen01;
+            $dato->imagen02 = $request->imagen02;
+            $dato->imagen03 = $request->imagen03;
+            $dato->save();
+            return redirect('/tipoHabitaciones');
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -45,7 +68,13 @@ class tipoHabitaciones extends Controller
      */
     public function edit($id)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = tipoHabitacion::find($id);
+            return view('Vistas.editaTipoHabitacion')->with('tipoHabitacion',$dato);
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -57,7 +86,22 @@ class tipoHabitaciones extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = tipoHabitacion::find($id);
+            if(!is_null($dato))
+            {
+                $dato->nombre = $request->nombre;
+                $dato->caracteristicas = $request->caracteristicas;
+                $dato->imagen01 = $request->imagen01;
+                $dato->imagen02 = $request->imagen02;
+                $dato->imagen03 = $request->imagen03;
+                $dato->save();
+            }
+            return redirect('/tipoHabitaciones');
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -67,7 +111,14 @@ class tipoHabitaciones extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {   
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = tipoHabitacion::find($id);
+            $dato->delete();
+            return redirect('/tipoHabitaciones');
+        }
+        else
+            return redirect('/');
     }
 }

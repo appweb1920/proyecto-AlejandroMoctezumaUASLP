@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 // -----------------------------------------------------------------------
 // Otros
 Auth::routes();
+Route::get('/','HomeController@portada');
 // -----------------------------------------------------------------------
 
 // -----------------------------------------------------------------------
@@ -39,7 +40,7 @@ Route::resource('paises', paises::class)->only([
     'index', 'create', 'store', 'edit', 'update', 'destroy'
 ]);;
 Route::resource('reservas', reservas::class)->only([
-    'index', 'create', 'store', 'show', 'edit', 'update'
+    'index', 'create', 'store', 'show', 'edit', 'update', 'destroy'
 ]);;
 Route::resource('tipoHabitaciones', tipoHabitaciones::class)->only([
     'index', 'create', 'store', 'edit', 'update', 'destroy'
@@ -48,9 +49,9 @@ Route::resource('tipoHabitaciones', tipoHabitaciones::class)->only([
 
 // -----------------------------------------------------------------------
 // Carrito Habitaciones
-Route::get('/carritoHabitaciones','carritoHabitaciones@index');
-Route::post('/carritoHabitaciones','carritoHabitaciones@store');
-Route::delete('/carritoHabitaciones/{id}','carritoHabitaciones@destroy');
+Route::get('/carrito','carritoHabitaciones@index');
+Route::post('/carrito','carritoHabitaciones@store');
+Route::delete('/carrito/{id}','carritoHabitaciones@destroy');
 // -----------------------------------------------------------------------
 
 // -----------------------------------------------------------------------
@@ -108,6 +109,7 @@ Route::post('/reservas','reservas@store');
 Route::get('/reservas/{id}','reservas@show');
 Route::get('/reservas/{id}/edit','reservas@edit');
 Route::put('/reservas/{id}','reservas@update');
+Route::get('/reservaConfirmada','HomeController@reservaConfirmada');
 // -----------------------------------------------------------------------
 
 // -----------------------------------------------------------------------

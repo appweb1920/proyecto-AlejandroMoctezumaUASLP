@@ -21,8 +21,18 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function portada()
     {
-        return view('home');
+        return view('Vistas.portada');
+    }
+
+    /**
+     * Pantalla mostrada al hacer una reservación
+     *
+     * @return void
+     */
+    public function reservaConfirmada()
+    {
+        return view('Vistas.reservacionExitosa');
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
+use App\Models\hotel;
 
 class hoteles extends Controller
 {
@@ -13,7 +15,13 @@ class hoteles extends Controller
      */
     public function index()
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $d = hotel::all();
+            return view('Vistas.muestraHoteles')->with('hoteles',$d);
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -23,7 +31,10 @@ class hoteles extends Controller
      */
     public function create()
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+            return view('Vistas.creaHotel');
+        else
+            return redirect('/');
     }
 
     /**
@@ -34,7 +45,19 @@ class hoteles extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = new hotel;
+            $dato->nombre = $request->nombre;
+            $dato->estrellas = $request->estrellas;
+            $dato->horaCheckIn = $request->horaCheckIn;
+            $dato->horaCheckOut = $request->horaCheckOut;
+            $dato->idDireccion = $request->idDireccion;
+            $dato->save();
+            return redirect('/hoteles');
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -45,7 +68,13 @@ class hoteles extends Controller
      */
     public function edit($id)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = hotel::find($id);
+            return view('Vistas.editaHotel')->with('hotel',$dato);
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -57,7 +86,22 @@ class hoteles extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = hotel::find($id);
+            if(!is_null($dato))
+            {
+                $dato->nombre = $request->nombre;
+                $dato->estrellas = $request->estrellas;
+                $dato->horaCheckIn = $request->horaCheckIn;
+                $dato->horaCheckOut = $request->horaCheckOut;
+                $dato->idDireccion = $request->idDireccion;
+                $dato->save();
+            }
+            return redirect('/hoteles');
+        }
+        else
+            return redirect('/');
     }
 
     /**
@@ -68,6 +112,13 @@ class hoteles extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (Auth::user()->rol == "Administrador")
+        {
+            $dato = hotel::find($id);
+            $dato->delete();
+            return redirect('/hoteles');
+        }
+        else
+            return redirect('/');
     }
 }

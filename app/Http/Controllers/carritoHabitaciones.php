@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
+use App\Models\carritoHabitacion;
 
 class carritoHabitaciones extends Controller
 {
@@ -13,7 +15,8 @@ class carritoHabitaciones extends Controller
      */
     public function index()
     {
-        //
+        $d = carritoHabitacion::all();
+        return view('Vistas.muestraCarrito')->with('carrito',$d);
     }
 
     /**
@@ -24,7 +27,11 @@ class carritoHabitaciones extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dato = new carritoHabitacion;
+        $dato->idUsuario = $request->idUsuario;
+        $dato->idHabitacion = $request->idHabitacion;
+        $dato->save();
+        return redirect('/carrito');
     }
 
     /**
@@ -35,6 +42,8 @@ class carritoHabitaciones extends Controller
      */
     public function destroy($id)
     {
-        //
+        $dato = carritoHabitacion::find($id);
+        $dato->delete();
+        return redirect('/carrito');
     }
 }
