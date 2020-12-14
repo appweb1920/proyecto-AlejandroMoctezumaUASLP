@@ -46,11 +46,6 @@ class habitaciones extends Controller
                 'paises.nombre AS paisNombre'
             )
             ->where('habitaciones.deleted_at','=',null)
-            ->whereNotIn('habitaciones.id',function($q){
-                $q->select('idHabitacion')
-                ->from('carritoHabitaciones')
-                ->where('carritoHabitaciones.deleted_at','=',null);
-            })
             ->get();
             return view('VistasHabitaciones.muestraHabitaciones')->with('habitaciones',$d);
         }
@@ -100,15 +95,19 @@ class habitaciones extends Controller
                 $q->select('habitaciones.id')
                 ->from('habitaciones')
                 ->join('reservas', 'reservas.idHabitacion', '=', 'habitaciones.id')
-                ->where(function($r) use ($request) {
-                    $r->where('reservas.checkIn', '>', $request->checkIn)
-                    ->where('reservas.checkIn', '>=', $request->checkOut)
-                    ->where('reservas.deleted_at','=',null);
-                })
-                ->orwhere(function($r) use ($request) {
-                    $r->where('reservas.checkOut', '<=', $request->checkIn)
-                    ->where('reservas.checkOut', '<', $request->checkOut)
-                    ->where('reservas.deleted_at','=',null);
+                ->whereNotIn('habitaciones.id',function($r) use ($request) {
+                    $r->select('idHabitacion')
+                    ->from('reservas')
+                    ->where(function($j) use ($request) {
+                        $j->where('reservas.checkIn', '>', $request->checkIn)
+                        ->where('reservas.checkIn', '>=', $request->checkOut)
+                        ->where('reservas.deleted_at','=',null);
+                    })
+                    ->orwhere(function($j) use ($request) {
+                        $j->where('reservas.checkOut', '<=', $request->checkIn)
+                        ->where('reservas.checkOut', '<', $request->checkOut)
+                        ->where('reservas.deleted_at','=',null);
+                    });
                 });
             })
             ->orderBy('habitaciones.precio','asc')

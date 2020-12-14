@@ -55,11 +55,6 @@ Route::delete('/carrito/{id}','carritoHabitaciones@destroy');
 // -----------------------------------------------------------------------
 // Direcciones
 Route::get('/direcciones','direcciones@index');
-Route::get('/direcciones/create','direcciones@create');
-Route::post('/direcciones','direcciones@store');
-Route::get('/direcciones/{id}/edit','direcciones@edit');
-Route::put('/direcciones/{id}','direcciones@update');
-Route::delete('/direcciones/{id}','direcciones@destroy');
 // -----------------------------------------------------------------------
 
 // -----------------------------------------------------------------------
