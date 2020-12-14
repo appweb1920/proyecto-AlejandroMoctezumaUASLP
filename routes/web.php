@@ -25,9 +25,6 @@ Route::get('/home','HomeController@portada');
 Route::resource('carritoHabitaciones', carritoHabitaciones::class)->only([
     'index', 'store', 'destroy'
 ]);;
-Route::resource('diaReservas', diaReservas::class)->only([
-    'index', 'store', 'destroy'
-]);;
 Route::resource('direcciones', direcciones::class)->only([
     'index'
 ]);;
@@ -53,13 +50,6 @@ Route::resource('tipoHabitaciones', tipoHabitaciones::class)->only([
 Route::get('/carrito','carritoHabitaciones@index');
 Route::post('/carrito','carritoHabitaciones@store');
 Route::delete('/carrito/{id}','carritoHabitaciones@destroy');
-// -----------------------------------------------------------------------
-
-// -----------------------------------------------------------------------
-// Dia Reservas
-Route::get('/diaReservas','diaReservas@index');
-Route::post('/diaReservas','diaReservas@store');
-Route::delete('/diaReservas/{id}','diaReservas@destroy');
 // -----------------------------------------------------------------------
 
 // -----------------------------------------------------------------------

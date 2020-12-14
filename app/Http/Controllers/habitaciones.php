@@ -99,8 +99,7 @@ class habitaciones extends Controller
             ->whereNotIn('habitaciones.id',function($q) use ($request) {
                 $q->select('habitaciones.id')
                 ->from('habitaciones')
-                ->join('diaReservas', 'diaReservas.idHabitacion', '=', 'habitaciones.id')
-                ->join('reservas', 'reservas.id', '=', 'diaReservas.idReserva')
+                ->join('reservas', 'reservas.idHabitacion', '=', 'habitaciones.id')
                 ->where(function($r) use ($request) {
                     $r->where('reservas.checkIn', '>', $request->checkIn)
                     ->where('reservas.checkIn', '>=', $request->checkOut)

@@ -78,11 +78,11 @@
                         <!-- Left Side Of Navbar -->
                         @guest
                             <ul id="nav-mobile" class="left">   
-                                <li><a href="/">PORTADA</a></li> 
+                                <li><a href="/">RESERVA AHORA</a></li> 
                             </ul>  
                         @else
                             <ul id="nav-mobile" class="left">  
-                                <li><a href="/">PORTADA</a></li>
+                                <li><a href="/">RESERVA AHORA</a></li>
                                 <li><a href="/reservas">Tus Reservaciones</a></li>  
                             </ul>  
                         @endguest

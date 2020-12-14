@@ -46,6 +46,8 @@ class reservas extends Controller
             ->join('paises', 'paises.id', '=', 'direcciones.idPais')
             ->select(
                 'carritoHabitaciones.id AS productoId',
+                'carritoHabitaciones.checkIn AS checkIn',
+                'carritoHabitaciones.checkOut AS checkOut',
                 'habitaciones.precio AS habitacionPrecio',
                 'habitaciones.imagen AS habitacionImagen',
                 'tipoHabitaciones.nombre AS tipoNombre',
@@ -64,7 +66,17 @@ class reservas extends Controller
             ->where('carritoHabitaciones.deleted_at','=',null)
             ->where('carritoHabitaciones.idUsuario','=',Auth::id())
             ->get();
-            return view('VistasReservas.creaReserva')->with("reservas",$d);
+            
+            $r = DB::table('carritoHabitaciones')
+            ->join('habitaciones', 'habitaciones.id', '=', 'carritoHabitaciones.idHabitacion')
+            ->select('habitaciones.precio')
+            ->where('carritoHabitaciones.deleted_at','=',null)
+            ->where('carritoHabitaciones.idUsuario','=',Auth::id())
+            ->sum();
+            
+            return view('VistasReservas.creaReserva')
+            ->with("habitaciones",$d)
+            ->with("total",$r);
         }
         else
             return redirect('/');

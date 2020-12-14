@@ -23,6 +23,7 @@ class Reserva extends Migration
             $table->string('apellidosTitular', 100);
             $table->string('peticiones', 200);
             $table->foreignId('idUsuario')->constrained('users');
+            $table->foreignId('idHabitacion')->constrained('habitaciones');
             $table->softDeletes();
             $table->timestamps();
         });
