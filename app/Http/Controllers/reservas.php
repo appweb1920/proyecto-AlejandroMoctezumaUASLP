@@ -17,12 +17,7 @@ class reservas extends Controller
      */
     public function index()
     {
-        if (Auth::user()->rol == "Administrador")
-        {
-            $d = reserva::all();
-            return view('VistasReservas.muestraReservas')->with('reservas',$d);
-        }
-        else if (Auth::user()->rol == "Usuario")
+        if (Auth::user()->rol == "Administrador" | Auth::user()->rol == "Usuario")
         {
             $d = DB::table('reservas')
             ->where('idUsuario','=',Auth::id())
@@ -41,7 +36,36 @@ class reservas extends Controller
     public function create()
     {   
         if (Auth::user()->rol == "Administrador" || Auth::user()->rol == "Usuario" )
-            return view('VistasReservas.creaReserva');
+        {
+            $d = DB::table('carritoHabitaciones')
+            ->join('users', 'users.id', '=', 'carritoHabitaciones.idUsuario')
+            ->join('habitaciones', 'habitaciones.id', '=', 'carritoHabitaciones.idHabitacion')
+            ->join('tipoHabitaciones', 'tipoHabitaciones.id', '=', 'habitaciones.idTipoHabitacion')
+            ->join('hoteles', 'hoteles.id', '=', 'habitaciones.idHotel')
+            ->join('direcciones', 'direcciones.id', '=', 'hoteles.idDireccion')
+            ->join('paises', 'paises.id', '=', 'direcciones.idPais')
+            ->select(
+                'carritoHabitaciones.id AS productoId',
+                'habitaciones.precio AS habitacionPrecio',
+                'habitaciones.imagen AS habitacionImagen',
+                'tipoHabitaciones.nombre AS tipoNombre',
+                'tipoHabitaciones.caracteristicas AS tipoCaracteristicas',
+                'hoteles.nombre AS hotelNombre',
+                'hoteles.estrellas AS hotelEstrellas',
+                'hoteles.horaCheckIn AS hotelCheckIn',
+                'hoteles.horaCheckOut AS hotelCheckOut',
+                'direcciones.calle AS direccionCalle',
+                'direcciones.numero AS direccionNumero',
+                'direcciones.ciudad AS direccionCiudad',
+                'direcciones.estado AS direccionEstado',
+                'direcciones.codigoPostal AS direccionCodigoPostal',
+                'paises.nombre AS paisNombre'
+            )
+            ->where('carritoHabitaciones.deleted_at','=',null)
+            ->where('carritoHabitaciones.idUsuario','=',Auth::id())
+            ->get();
+            return view('VistasReservas.creaReserva')->with("reservas",$d);
+        }
         else
             return redirect('/');
     }

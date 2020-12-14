@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -25,7 +26,11 @@ class HomeController extends Controller
      */
     public function portada()
     {
-        return view('Vistas.portada');
+        $fechaInicio = Carbon::now();
+        $fechaFin = Carbon::now()->addDays(2);
+        return view('Vistas.portada')
+        ->with("limiteCheckIn",$fechaInicio)
+        ->with("limiteCheckOut",$fechaFin);
     }
 
     /**

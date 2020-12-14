@@ -9,5 +9,5 @@ class diaReserva extends Model
 {
     use SoftDeletes;
     protected $table="diaReservas";
-    protected $fillable=['dia','idUsuario','idHabitacion','idReserva'];
+    protected $fillable=['idUsuario','idHabitacion','idReserva'];
 }

@@ -15,7 +15,6 @@ class DiaReserva extends Migration
     {
         Schema::create('diaReservas', function (Blueprint $table) {
             $table->id();
-            $table->date('dia');
             $table->foreignId('idUsuario')->constrained('users')->onDelete('cascade');
             $table->foreignId('idHabitacion')->constrained('habitaciones')->onDelete('cascade');
             $table->foreignId('idReserva')->constrained('reservas')->onDelete('cascade');

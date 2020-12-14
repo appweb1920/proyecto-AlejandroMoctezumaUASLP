@@ -65,6 +65,8 @@ class carritoHabitaciones extends Controller
         $dato = new carritoHabitacion;
         $dato->idUsuario = Auth::id();
         $dato->idHabitacion = $request->idHabitacion;
+        $dato->checkIn = $request->checkIn;
+        $dato->checkOut = $request->checkOut;
         $dato->save();
         return redirect('/carrito');
     }

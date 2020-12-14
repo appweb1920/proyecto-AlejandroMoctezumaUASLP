@@ -17,8 +17,7 @@ class Reserva extends Migration
             $table->id();
             $table->date('checkIn');
             $table->date('checkOut');
-            $table->double('total',8,2);
-            $table->boolean('pago');
+            $table->double('total',10,2);
             $table->boolean('usuarioEsTitular');
             $table->string('nombreTitular', 100);
             $table->string('apellidosTitular', 100);

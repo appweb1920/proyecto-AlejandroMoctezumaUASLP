@@ -57,6 +57,7 @@
                                             <a class="dropdown-item" href="/paises">Paises</a>
                                             <a class="dropdown-item" href="/hoteles">Hoteles</a>
                                             <a class="dropdown-item" href="/tipoHabitaciones">Tipo Habitaciones</a>
+                                            <a class="dropdown-item" href="/habitaciones">Ver Habitaciones</a>
                                             <a class="dropdown-item" href="/direcciones">Direcciones</a>
                                         @endif  
 
@@ -82,8 +83,7 @@
                         @else
                             <ul id="nav-mobile" class="left">  
                                 <li><a href="/">PORTADA</a></li>
-                                <li><a href="/habitaciones">Habitaciones</a></li> 
-                                <li><a href="/reservas">Reservas</a></li>  
+                                <li><a href="/reservas">Tus Reservaciones</a></li>  
                             </ul>  
                         @endguest
                     </div>  

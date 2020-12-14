@@ -24,5 +24,9 @@
                 </div>  
             </div>  
         @endforeach
+
+        <button class = "btn waves-effect waves-teal purple accent-1 z-depth-1">  
+            <a href="/reservas/create">Hacer Reservación</a>
+        </button></td>
     @endif
 @endsection

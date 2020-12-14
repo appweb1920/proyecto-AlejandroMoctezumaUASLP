@@ -75,6 +75,7 @@ Route::delete('/direcciones/{id}','direcciones@destroy');
 // -----------------------------------------------------------------------
 // Habitaciones
 Route::get('/habitaciones','habitaciones@index');
+Route::post('/habitacionesFiltradas','habitaciones@indexFiltro');
 Route::get('/habitaciones/create','habitaciones@create');
 Route::post('/habitaciones','habitaciones@store');
 Route::get('/habitaciones/{id}/edit','habitaciones@edit');

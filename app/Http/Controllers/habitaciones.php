@@ -59,6 +59,70 @@ class habitaciones extends Controller
     }
 
     /**
+     * Display a listing of the resource with a filter applied
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function indexFiltro(Request $request)
+    {
+        if (Auth::user()->rol == "Administrador" || Auth::user()->rol == "Usuario")
+        {
+            $d = DB::table('habitaciones')
+            ->join('tipoHabitaciones', 'tipoHabitaciones.id', '=', 'habitaciones.idTipoHabitacion')
+            ->join('hoteles', 'hoteles.id', '=', 'habitaciones.idHotel')
+            ->join('direcciones', 'direcciones.id', '=', 'hoteles.idDireccion')
+            ->join('paises', 'paises.id', '=', 'direcciones.idPais')
+            ->select(
+                'habitaciones.id AS habitacionId',
+                'habitaciones.precio AS habitacionPrecio',
+                'habitaciones.imagen AS habitacionImagen',
+                'tipoHabitaciones.nombre AS tipoNombre',
+                'tipoHabitaciones.caracteristicas AS tipoCaracteristicas',
+                'hoteles.nombre AS hotelNombre',
+                'hoteles.estrellas AS hotelEstrellas',
+                'hoteles.horaCheckIn AS hotelCheckIn',
+                'hoteles.horaCheckOut AS hotelCheckOut',
+                'direcciones.calle AS direccionCalle',
+                'direcciones.numero AS direccionNumero',
+                'direcciones.ciudad AS direccionCiudad',
+                'direcciones.estado AS direccionEstado',
+                'direcciones.codigoPostal AS direccionCodigoPostal',
+                'paises.nombre AS paisNombre'
+            )
+            ->where('habitaciones.deleted_at','=',null)
+            ->whereNotIn('habitaciones.id',function($q){
+                $q->select('idHabitacion')
+                ->from('carritoHabitaciones')
+                ->where('carritoHabitaciones.deleted_at','=',null);
+            })
+            ->whereNotIn('habitaciones.id',function($q) use ($request) {
+                $q->select('habitaciones.id')
+                ->from('habitaciones')
+                ->join('diaReservas', 'diaReservas.idHabitacion', '=', 'habitaciones.id')
+                ->join('reservas', 'reservas.id', '=', 'diaReservas.idReserva')
+                ->where(function($r) use ($request) {
+                    $r->where('reservas.checkIn', '>', $request->checkIn)
+                    ->where('reservas.checkIn', '>=', $request->checkOut)
+                    ->where('reservas.deleted_at','=',null);
+                })
+                ->orwhere(function($r) use ($request) {
+                    $r->where('reservas.checkOut', '<=', $request->checkIn)
+                    ->where('reservas.checkOut', '<', $request->checkOut)
+                    ->where('reservas.deleted_at','=',null);
+                });
+            })
+            ->orderBy('habitaciones.precio','asc')
+            ->get();
+            return view('VistasHabitaciones.muestraHabitaciones')
+            ->with('habitaciones',$d)
+            ->with('fechas',$request);
+        }
+        else
+            return redirect('/');
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

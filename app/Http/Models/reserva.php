@@ -9,5 +9,5 @@ class reserva extends Model
 {
     use SoftDeletes;
     protected $table="reservas";
-    protected $fillable=['checkIn','checkOut','total','pago','usuarioEsTitular','nombreTitular','apellidosTitular','peticiones','idUsuario'];
+    protected $fillable=['checkIn','checkOut','total','usuarioEsTitular','nombreTitular','apellidosTitular','peticiones','idUsuario'];
 }
