@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use DB;
 use App\Models\reserva;
+use App\Models\carritoHabitacion;
 use Illuminate\Support\Facades\Auth;
 
 class reservas extends Controller
@@ -20,7 +21,33 @@ class reservas extends Controller
         if (Auth::user()->rol == "Administrador" | Auth::user()->rol == "Usuario")
         {
             $d = DB::table('reservas')
-            ->where('idUsuario','=',Auth::id())
+            ->join('habitaciones', 'habitaciones.id', '=', 'reservas.idHabitacion')
+            ->join('tipoHabitaciones', 'tipoHabitaciones.id', '=', 'habitaciones.idTipoHabitacion')
+            ->join('hoteles', 'hoteles.id', '=', 'habitaciones.idHotel')
+            ->join('direcciones', 'direcciones.id', '=', 'hoteles.idDireccion')
+            ->join('paises', 'paises.id', '=', 'direcciones.idPais')
+            ->select(
+                'reservas.id AS reservaId',
+                'reservas.nombreTitular AS reservaNombre',
+                'reservas.apellidosTitular AS reservaApellidos',
+                'reservas.peticiones AS reservaPeticiones',
+                'reservas.total AS reservaTotal',
+                'habitaciones.imagen AS habitacionImagen',
+                'tipoHabitaciones.nombre AS tipoNombre',
+                'tipoHabitaciones.caracteristicas AS tipoCaracteristicas',
+                'hoteles.nombre AS hotelNombre',
+                'hoteles.estrellas AS hotelEstrellas',
+                'hoteles.horaCheckIn AS hotelCheckIn',
+                'hoteles.horaCheckOut AS hotelCheckOut',
+                'direcciones.calle AS direccionCalle',
+                'direcciones.numero AS direccionNumero',
+                'direcciones.ciudad AS direccionCiudad',
+                'direcciones.estado AS direccionEstado',
+                'direcciones.codigoPostal AS direccionCodigoPostal',
+                'paises.nombre AS paisNombre'
+            )
+            ->where('reservas.deleted_at','=',null)
+            ->where('reservas.idUsuario','=',Auth::id())
             ->get();
             return view('VistasReservas.muestraReservas')->with('reservas',$d);
         }
@@ -69,10 +96,9 @@ class reservas extends Controller
             
             $r = DB::table('carritoHabitaciones')
             ->join('habitaciones', 'habitaciones.id', '=', 'carritoHabitaciones.idHabitacion')
-            ->select('habitaciones.precio')
             ->where('carritoHabitaciones.deleted_at','=',null)
             ->where('carritoHabitaciones.idUsuario','=',Auth::id())
-            ->sum();
+            ->sum('habitaciones.precio');
             
             return view('VistasReservas.creaReserva')
             ->with("habitaciones",$d)
@@ -92,17 +118,41 @@ class reservas extends Controller
     {
         if (Auth::user()->rol == "Administrador" || Auth::user()->rol == "Usuario" )
         {
-            $dato = new reserva;
-            $dato->checkIn = $request->checkIn;
-            $dato->checkOut = $request->checkOut;
-            $dato->total = $request->total;
-            $dato->pago = $request->pago;
-            $dato->usuarioEsTitular = $request->usuarioEsTitular;
-            $dato->nombreTitular = $request->nombreTitular;
-            $dato->apellidosTitular = $request->apellidosTitular;
-            $dato->peticiones = $request->peticiones;
-            $dato->idUsuario = $request->idUsuario;
-            $dato->save();
+            $habitaciones = DB::table('carritoHabitaciones')
+            ->join('habitaciones', 'habitaciones.id', '=', 'carritoHabitaciones.idHabitacion')
+            ->select(
+                'carritoHabitaciones.id AS carritoId',
+                'carritoHabitaciones.checkIn AS checkIn',
+                'carritoHabitaciones.checkOut AS checkOut',
+                'habitaciones.id AS habitacionId'
+            )
+            ->where('carritoHabitaciones.deleted_at','=',null)
+            ->where('carritoHabitaciones.idUsuario','=',Auth::id())
+            ->get();
+            
+            $total = DB::table('carritoHabitaciones')
+            ->join('habitaciones', 'habitaciones.id', '=', 'carritoHabitaciones.idHabitacion')
+            ->where('carritoHabitaciones.deleted_at','=',null)
+            ->where('carritoHabitaciones.idUsuario','=',Auth::id())
+            ->sum('habitaciones.precio');
+
+            foreach($habitaciones as $habitacion)
+            {
+                $reserva = new reserva;
+                $reserva->checkIn = $habitacion->checkIn;
+                $reserva->checkOut = $habitacion->checkOut;
+                $reserva->total = $total;
+                $reserva->usuarioEsTitular = true;
+                $reserva->nombreTitular = $request->nombreTitular;
+                $reserva->apellidosTitular = $request->apellidosTitular;
+                $reserva->peticiones = $request->peticiones;
+                $reserva->idUsuario = Auth::id();
+                $reserva->idHabitacion = $habitacion->habitacionId;
+                $reserva->save();
+
+                $carrito = carritoHabitacion::find($habitacion->carritoId);
+                $carrito->delete();
+            }
             return redirect('/reservaConfirmada');
         }
         else
@@ -111,79 +161,6 @@ class reservas extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        if (Auth::user()->rol == "Administrador")
-        {
-            $dato = reserva::find($id);
-            return view('VistasReservas.muestraReserva')->with('reserva',$dato);
-        }
-        else if (Auth::user()->rol == "Usuario")
-        {
-            $dato = reserva::find($id);
-            if ($dato->idUsuario == Auth::id())
-                return view('VistasReservas.muestraReserva')->with('reserva',$dato);
-            else
-                return redirect('/');
-        }
-        else
-            return redirect('/');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        if (Auth::user()->rol == "Administrador")
-        {
-            $dato = reserva::find($id);
-            return view('VistasReservas.editaReserva')->with('reserva',$dato);
-        }
-        else
-            return redirect('/');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        if (Auth::user()->rol == "Administrador")
-        {
-            $dato = reserva::find($id);
-            if(!is_null($dato))
-            {
-                $dato->checkIn = $request->checkIn;
-                $dato->checkOut = $request->checkOut;
-                $dato->total = $request->total;
-                $dato->pago = $request->pago;
-                $dato->usuarioEsTitular = $request->usuarioEsTitular;
-                $dato->nombreTitular = $request->nombreTitular;
-                $dato->apellidosTitular = $request->apellidosTitular;
-                $dato->peticiones = $request->peticiones;
-                $dato->idUsuario = $request->idUsuario;
-                $dato->save();
-            }
-            return redirect('/reservas');
-        }
-        else
-            return redirect('/');
-    }
-    
-    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -191,7 +168,7 @@ class reservas extends Controller
      */
     public function destroy($id)
     {
-        if (Auth::user()->rol == "Administrador")
+        if (Auth::user()->rol == "Administrador" || Auth::user()->rol == "Usuario")
         {
             $dato = reserva::find($id);
             $dato->delete();
