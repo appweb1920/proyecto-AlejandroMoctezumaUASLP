@@ -79,8 +79,8 @@
                                 @if(Auth::user()->rol == 'Administrador')
                                     <li><a href="/paises">Paises</a></li>
                                     <li><a href="/direcciones">Direcciones</a></li>
-                                    <li><a href="/hoteles">Hoteles</a></li>
                                     <li><a href="/tipoHabitaciones">Tipo Habitaciones</a></li>
+                                    <li><a href="/hoteles">Hoteles</a></li>
                                 @endif  
                             </ul>  
                         @endguest

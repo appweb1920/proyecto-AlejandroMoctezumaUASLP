@@ -19,7 +19,7 @@ class Hotel extends Migration
             $table->integer('estrellas');
             $table->string('horaCheckIn', 100);
             $table->string('horaCheckOut', 100);
-            $table->foreignId('idDireccion')->constrained('direcciones');
+            $table->foreignId('idDireccion')->constrained('direcciones')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

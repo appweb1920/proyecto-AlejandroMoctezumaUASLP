@@ -16,8 +16,8 @@ class Habitacion extends Migration
         Schema::create('habitaciones', function (Blueprint $table) {
             $table->id();
             $table->double('precio',8,2);
-            $table->foreignId('idTipoHabitacion')->constrained('tipoHabitaciones');
-            $table->foreignId('idHotel')->constrained('hoteles');
+            $table->foreignId('idTipoHabitacion')->constrained('tipoHabitaciones')->onDelete('set null');
+            $table->foreignId('idHotel')->constrained('hoteles')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

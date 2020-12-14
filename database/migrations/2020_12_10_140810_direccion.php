@@ -20,7 +20,7 @@ class Direccion extends Migration
             $table->string('ciudad', 100);
             $table->string('estado', 100);
             $table->string('codigoPostal', 100);
-            $table->foreignId('idPais')->constrained('paises');
+            $table->foreignId('idPais')->constrained('paises')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

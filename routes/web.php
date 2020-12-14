@@ -29,7 +29,7 @@ Route::resource('diaReservas', diaReservas::class)->only([
     'index', 'store', 'destroy'
 ]);;
 Route::resource('direcciones', direcciones::class)->only([
-    'index', 'create', 'store', 'edit', 'update', 'destroy'
+    'index'
 ]);;
 Route::resource('habitaciones', habitaciones::class)->only([
     'index', 'create', 'store', 'edit', 'update', 'destroy'

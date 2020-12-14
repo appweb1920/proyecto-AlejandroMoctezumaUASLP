@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use DB;
 use App\Models\hotel;
+use App\Models\direccion;
+use App\Models\pais;
 use Illuminate\Support\Facades\Auth;
 
 class hoteles extends Controller
@@ -19,7 +21,24 @@ class hoteles extends Controller
     {
         if (Auth::user()->rol == "Administrador")
         {
-            $d = hotel::all();
+            $d = DB::table('hoteles')
+            ->join('direcciones', 'direcciones.id', '=', 'hoteles.idDireccion')
+            ->join('paises', 'paises.id', '=', 'direcciones.idPais')
+            ->select(
+                'hoteles.id AS hotelId',
+                'hoteles.nombre AS hotelNombre',
+                'hoteles.estrellas AS hotelEstrellas',
+                'hoteles.horaCheckIn AS hotelCheckIn',
+                'hoteles.horaCheckOut AS hotelCheckOut',
+                'direcciones.calle AS direccionCalle',
+                'direcciones.numero AS direccionNumero',
+                'direcciones.ciudad AS direccionCiudad',
+                'direcciones.estado AS direccionEstado',
+                'direcciones.codigoPostal AS direccionCodigoPostal',
+                'paises.nombre AS paisNombre'
+            )
+            ->where('hoteles.deleted_at','=',null)
+            ->get();
             return view('VistasHoteles.muestraHoteles')->with('hoteles',$d);
         }
         else
@@ -34,7 +53,10 @@ class hoteles extends Controller
     public function create()
     {
         if (Auth::user()->rol == "Administrador")
-            return view('VistasHoteles.creaHotel');
+        {
+            $d = pais::all();
+            return view('VistasHoteles.creaHotel')->with('paises',$d);
+        }
         else
             return redirect('/');
     }
@@ -49,13 +71,23 @@ class hoteles extends Controller
     {
         if (Auth::user()->rol == "Administrador")
         {
-            $dato = new hotel;
-            $dato->nombre = $request->nombre;
-            $dato->estrellas = $request->estrellas;
-            $dato->horaCheckIn = $request->horaCheckIn;
-            $dato->horaCheckOut = $request->horaCheckOut;
-            $dato->idDireccion = $request->idDireccion;
-            $dato->save();
+            $direccion = new direccion;
+            $direccion->calle = $request->calle;
+            $direccion->numero = $request->numero;
+            $direccion->ciudad = $request->ciudad;
+            $direccion->estado = $request->estado;
+            $direccion->codigoPostal = $request->codigoPostal;
+            $direccion->idPais = $request->idPais;
+            $direccion->save();
+
+            $hotel = new hotel;
+            $hotel->nombre = $request->nombre;
+            $hotel->estrellas = $request->estrellas;
+            $hotel->horaCheckIn = $request->horaCheckIn;
+            $hotel->horaCheckOut = $request->horaCheckOut;
+            $hotel->idDireccion = $direccion->id;
+            $hotel->save();
+
             return redirect('/hoteles');
         }
         else
@@ -72,8 +104,29 @@ class hoteles extends Controller
     {
         if (Auth::user()->rol == "Administrador")
         {
-            $dato = hotel::find($id);
-            return view('VistasHoteles.editaHotel')->with('hotel',$dato);
+            $d = DB::table('hoteles')
+            ->join('direcciones', 'direcciones.id', '=', 'hoteles.idDireccion')
+            ->join('paises', 'paises.id', '=', 'direcciones.idPais')
+            ->select(
+                'hoteles.id AS hotelId',
+                'hoteles.nombre AS hotelNombre',
+                'hoteles.estrellas AS hotelEstrellas',
+                'hoteles.horaCheckIn AS hotelCheckIn',
+                'hoteles.horaCheckOut AS hotelCheckOut',
+                'direcciones.id AS direccionId',
+                'direcciones.calle AS direccionCalle',
+                'direcciones.numero AS direccionNumero',
+                'direcciones.ciudad AS direccionCiudad',
+                'direcciones.estado AS direccionEstado',
+                'direcciones.codigoPostal AS direccionCodigoPostal',
+                'paises.nombre AS paisNombre'
+            )
+            ->where('hoteles.id','=',$id)
+            ->get();
+            $r = pais::all();
+            return view('VistasHoteles.editaHotel')
+            ->with('hotel',$d)
+            ->with('paises',$r);
         }
         else
             return redirect('/');
@@ -90,15 +143,24 @@ class hoteles extends Controller
     {
         if (Auth::user()->rol == "Administrador")
         {
-            $dato = hotel::find($id);
-            if(!is_null($dato))
+            $hotel = hotel::find($id);
+            $direccion = direccion::find($request->direccionId);
+            if(!is_null($hotel) & !is_null($direccion))
             {
-                $dato->nombre = $request->nombre;
-                $dato->estrellas = $request->estrellas;
-                $dato->horaCheckIn = $request->horaCheckIn;
-                $dato->horaCheckOut = $request->horaCheckOut;
-                $dato->idDireccion = $request->idDireccion;
-                $dato->save();
+                $direccion->calle = $request->calle;
+                $direccion->numero = $request->numero;
+                $direccion->ciudad = $request->ciudad;
+                $direccion->estado = $request->estado;
+                $direccion->codigoPostal = $request->codigoPostal;
+                $direccion->idPais = $request->idPais;
+                $direccion->save();
+
+                $hotel->nombre = $request->nombre;
+                $hotel->estrellas = $request->estrellas;
+                $hotel->horaCheckIn = $request->horaCheckIn;
+                $hotel->horaCheckOut = $request->horaCheckOut;
+                $hotel->idDireccion = $direccion->id;
+                $hotel->save();
             }
             return redirect('/hoteles');
         }
