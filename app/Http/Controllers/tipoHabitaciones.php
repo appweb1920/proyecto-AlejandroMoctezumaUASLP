@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use DB;
 use App\Models\tipoHabitacion;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class tipoHabitaciones extends Controller
 {
@@ -52,9 +54,25 @@ class tipoHabitaciones extends Controller
             $dato = new tipoHabitacion;
             $dato->nombre = $request->nombre;
             $dato->caracteristicas = $request->caracteristicas;
-            $dato->imagen01 = $request->imagen01;
-            $dato->imagen02 = $request->imagen02;
-            $dato->imagen03 = $request->imagen03;
+
+            $archivo = $request->file('imagen01');
+            $request->file('imagen01')->storeAs(
+                    "public/imgs", $dato->nombre . "01." . $archivo->getClientOriginalExtension()
+            );
+            $dato->imagen01 = $dato->nombre . "01." . $archivo->getClientOriginalExtension();
+
+            $archivo = $request->file('imagen02');
+            $request->file('imagen02')->storeAs(
+                    "public/imgs", $dato->nombre . "02." . $archivo->getClientOriginalExtension()
+            );
+            $dato->imagen02 = $dato->nombre . "02." . $archivo->getClientOriginalExtension();
+
+            $archivo = $request->file('imagen03');
+            $request->file('imagen03')->storeAs(
+                    "public/imgs", $dato->nombre . "03." . $archivo->getClientOriginalExtension()
+            );
+            $dato->imagen03 = $dato->nombre . "03." . $archivo->getClientOriginalExtension();
+
             $dato->save();
             return redirect('/tipoHabitaciones');
         }
@@ -95,9 +113,36 @@ class tipoHabitaciones extends Controller
             {
                 $dato->nombre = $request->nombre;
                 $dato->caracteristicas = $request->caracteristicas;
-                $dato->imagen01 = $request->imagen01;
-                $dato->imagen02 = $request->imagen02;
-                $dato->imagen03 = $request->imagen03;
+
+                if(!is_null($request->imagen01))
+                {
+                    File::delete('storage/imgs/'. $dato->imagen01);
+                    $archivo = $request->file('imagen01');
+                    $request->file('imagen01')->storeAs(
+                            "public/imgs", $dato->nombre . "01." . $archivo->getClientOriginalExtension()
+                    );
+                    $dato->imagen01 = $dato->nombre . "01." . $archivo->getClientOriginalExtension();
+                }
+
+                if(!is_null($request->imagen02))
+                {
+                    File::delete('storage/imgs/'. $dato->imagen02);
+                    $archivo = $request->file('imagen02');
+                    $request->file('imagen02')->storeAs(
+                            "public/imgs", $dato->nombre . "02." . $archivo->getClientOriginalExtension()
+                    );
+                    $dato->imagen02 = $dato->nombre . "02." . $archivo->getClientOriginalExtension();
+                }
+
+                if(!is_null($request->imagen03))
+                {
+                    File::delete('storage/imgs/'. $dato->imagen03);
+                    $archivo = $request->file('imagen03');
+                    $request->file('imagen03')->storeAs(
+                            "public/imgs", $dato->nombre . "03." . $archivo->getClientOriginalExtension()
+                    );
+                    $dato->imagen03 = $dato->nombre . "03." . $archivo->getClientOriginalExtension();
+                }
                 $dato->save();
             }
             return redirect('/tipoHabitaciones');
@@ -117,6 +162,19 @@ class tipoHabitaciones extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $dato = tipoHabitacion::find($id);
+
+            if(File::exists('storage/imgs/'. $dato->imagen01)) {
+                File::delete('storage/imgs/'. $dato->imagen01);
+            }
+
+            if(File::exists('storage/imgs/'. $dato->imagen02)) {
+                File::delete('storage/imgs/'. $dato->imagen02);
+            }
+
+            if(File::exists('storage/imgs/'. $dato->imagen03)) {
+                File::delete('storage/imgs/'. $dato->imagen03);
+            }
+
             $dato->delete();
             return redirect('/tipoHabitaciones');
         }

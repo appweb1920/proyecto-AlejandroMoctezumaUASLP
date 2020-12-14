@@ -15,9 +15,9 @@
                 <div class = "col s10 m10 l10 light-green darken-3 white-text">  
                     <p>[{{$tipoHabitacion->nombre}}]</p>
                     <p>{{$tipoHabitacion->caracteristicas}}</p>
-                    <p>{{$tipoHabitacion->imagen01}}</p>
-                    <p>{{$tipoHabitacion->imagen02}}</p>
-                    <p>{{$tipoHabitacion->imagen03}}</p>
+                    <img src="{{asset('/storage/imgs/'. $tipoHabitacion->imagen01)}}">
+                    <img src="{{asset('/storage/imgs/'. $tipoHabitacion->imagen02)}}">
+                    <img src="{{asset('/storage/imgs/'. $tipoHabitacion->imagen03)}}">
                     @if(Auth::user()->rol == 'Administrador')
                         <form action="tipoHabitaciones/{{$tipoHabitacion->id}}" method="POST" class = "col s12"> 
                         @csrf
