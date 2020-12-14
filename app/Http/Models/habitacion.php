@@ -9,5 +9,5 @@ class habitacion extends Model
 {
     use SoftDeletes;
     protected $table="habitaciones";
-    protected $fillable=['precio','idTipoHabitacion','idHotel'];
+    protected $fillable=['precio','imagen','idTipoHabitacion','idHotel'];
 }

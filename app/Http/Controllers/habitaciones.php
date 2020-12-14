@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 
 use DB;
 use App\Models\habitacion;
+use App\Models\hotel;
+use App\Models\tipoHabitacion;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class habitaciones extends Controller
 {
@@ -19,7 +23,30 @@ class habitaciones extends Controller
     {
         if (Auth::user()->rol == "Administrador" || Auth::user()->rol == "Usuario")
         {
-            $d = habitacion::all();
+            $d = DB::table('habitaciones')
+            ->join('tipoHabitaciones', 'tipoHabitaciones.id', '=', 'habitaciones.idTipoHabitacion')
+            ->join('hoteles', 'hoteles.id', '=', 'habitaciones.idHotel')
+            ->join('direcciones', 'direcciones.id', '=', 'hoteles.idDireccion')
+            ->join('paises', 'paises.id', '=', 'direcciones.idPais')
+            ->select(
+                'habitaciones.id AS habitacionId',
+                'habitaciones.precio AS habitacionPrecio',
+                'habitaciones.imagen AS habitacionImagen',
+                'tipoHabitaciones.nombre AS tipoNombre',
+                'tipoHabitaciones.caracteristicas AS tipoCaracteristicas',
+                'hoteles.nombre AS hotelNombre',
+                'hoteles.estrellas AS hotelEstrellas',
+                'hoteles.horaCheckIn AS hotelCheckIn',
+                'hoteles.horaCheckOut AS hotelCheckOut',
+                'direcciones.calle AS direccionCalle',
+                'direcciones.numero AS direccionNumero',
+                'direcciones.ciudad AS direccionCiudad',
+                'direcciones.estado AS direccionEstado',
+                'direcciones.codigoPostal AS direccionCodigoPostal',
+                'paises.nombre AS paisNombre'
+            )
+            ->where('habitaciones.deleted_at','=',null)
+            ->get();
             return view('VistasHabitaciones.muestraHabitaciones')->with('habitaciones',$d);
         }
         else
@@ -34,7 +61,13 @@ class habitaciones extends Controller
     public function create()
     {
         if (Auth::user()->rol == "Administrador")
-            return view('VistasHabitaciones.creaHabitacion');
+        {
+            $d = hotel::all();
+            $r = tipoHabitacion::all();
+            return view('VistasHabitaciones.creaHabitacion')
+            ->with('hoteles',$d)
+            ->with('tipoHabitaciones',$r);
+        }
         else
             return redirect('/');
         
@@ -50,11 +83,25 @@ class habitaciones extends Controller
     {   
         if (Auth::user()->rol == "Administrador")
         {
+            if(is_null($request->file('imagen')))
+            {
+                return redirect()->back()->withErrors(["error"=>"Hay que incluir una imagen"])->withInput();
+            }
+
             $dato = new habitacion;
             $dato->precio = $request->precio;
             $dato->idTipoHabitacion = $request->idTipoHabitacion;
-            $dato->idTipoHotel = $request->idTipoHotel;
+            $dato->idHotel = $request->idHotel;
+            $dato->imagen = "";
             $dato->save();
+
+            $archivo = $request->file('imagen');
+            $request->file('imagen')->storeAs(
+                    "public/imgs", $dato->id . "." . $archivo->getClientOriginalExtension()
+            );
+            $dato->imagen = $dato->id . "." . $archivo->getClientOriginalExtension();
+            $dato->save();
+
             return redirect('/habitaciones');
         }
         else
@@ -71,8 +118,21 @@ class habitaciones extends Controller
     {   
         if (Auth::user()->rol == "Administrador")
         {
-            $dato = habitacion::find($id);
-            return view('VistasHabitaciones.editaHabitacion')->with('habitacion',$dato);
+            $d = DB::table('habitaciones')
+            ->select(
+                'habitaciones.id',
+                'habitaciones.precio',
+                'habitaciones.idTipoHabitacion',
+                'habitaciones.idHotel'
+            )
+            ->where('habitaciones.id','=',$id)
+            ->get();;
+            $r = hotel::all();
+            $j = tipoHabitacion::all();
+            return view('VistasHabitaciones.editaHabitacion')
+            ->with('habitacion',$d)
+            ->with('hoteles',$r)
+            ->with('tipoHabitaciones',$j);
         }
         else
             return redirect('/');
@@ -94,7 +154,18 @@ class habitaciones extends Controller
             {
                 $dato->precio = $request->precio;
                 $dato->idTipoHabitacion = $request->idTipoHabitacion;
-                $dato->idTipoHotel = $request->idTipoHotel;
+                $dato->idHotel = $request->idHotel;
+
+                if(!is_null($request->imagen))
+                {
+                    File::delete('storage/imgs/'. $dato->imagen);
+                    $archivo = $request->file('imagen');
+                    $request->file('imagen')->storeAs(
+                            "public/imgs", $dato->id . "." . $archivo->getClientOriginalExtension()
+                    );
+                    $dato->imagen = $dato->id . "." . $archivo->getClientOriginalExtension();
+                }
+
                 $dato->save();
             }
             return redirect('/habitaciones');
@@ -114,6 +185,11 @@ class habitaciones extends Controller
         if (Auth::user()->rol == "Administrador")
         {
             $dato = habitacion::find($id);
+
+            if(File::exists('storage/imgs/'. $dato->imagen)) {
+                File::delete('storage/imgs/'. $dato->imagen);
+            }
+
             $dato->delete();
             return redirect('/habitaciones');
         }

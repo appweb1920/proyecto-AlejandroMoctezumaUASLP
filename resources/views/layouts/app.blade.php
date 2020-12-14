@@ -52,10 +52,18 @@
                                     </a>
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="/carrito">CARRITO</a>
+                                        @if(Auth::user()->rol == 'Administrador')
+                                            <a class="dropdown-item" href="/paises">Paises</a>
+                                            <a class="dropdown-item" href="/hoteles">Hoteles</a>
+                                            <a class="dropdown-item" href="/tipoHabitaciones">Tipo Habitaciones</a>
+                                            <a class="dropdown-item" href="/direcciones">Direcciones</a>
+                                        @endif  
+
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
                                                         document.getElementById('logout-form').submit();">
-                                            {{ __('Logout') }}
+                                            {{ __('LOGOUT') }}
                                         </a>
 
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -75,13 +83,7 @@
                             <ul id="nav-mobile" class="left">  
                                 <li><a href="/">PORTADA</a></li>
                                 <li><a href="/habitaciones">Habitaciones</a></li> 
-                                <li><a href="/reservas">Reserva</a></li>  
-                                @if(Auth::user()->rol == 'Administrador')
-                                    <li><a href="/paises">Paises</a></li>
-                                    <li><a href="/direcciones">Direcciones</a></li>
-                                    <li><a href="/tipoHabitaciones">Tipo Habitaciones</a></li>
-                                    <li><a href="/hoteles">Hoteles</a></li>
-                                @endif  
+                                <li><a href="/reservas">Reservas</a></li>  
                             </ul>  
                         @endguest
                     </div>  

@@ -51,6 +51,11 @@ class tipoHabitaciones extends Controller
     {
         if (Auth::user()->rol == "Administrador")
         {
+            if(is_null($request->file('imagen01')) | is_null($request->file('imagen02')) | is_null($request->file('imagen03')))
+            {
+                return redirect()->back()->withErrors(["error"=>"Hay que incluir las 3 imagenes"])->withInput();
+            }
+
             $dato = new tipoHabitacion;
             $dato->nombre = $request->nombre;
             $dato->caracteristicas = $request->caracteristicas;

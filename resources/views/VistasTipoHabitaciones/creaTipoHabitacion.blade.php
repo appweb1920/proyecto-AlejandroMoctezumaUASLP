@@ -6,6 +6,10 @@
     <div class = "row"> 
         <form action="/tipoHabitaciones" method="POST" enctype = "multipart/form-data" class = "col s12"> 
         @csrf
+            @error('error')
+                <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+
             <div class = "row">  
                 <div class = "input-field col s6">  
                 <input placeholder = "Estandar" type="text" name="nombre">
