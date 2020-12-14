@@ -4,6 +4,53 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
+| NOTAS DEL PROYECTO
+|--------------------------------------------------------------------------
+|
+| Correr las migraciones y el seed "UserSeeder"
+| Estoy usando 'engine' => 'InnoDB' en 'database.php' del folder config.
+| Aunque me hubiera gustado incluir Seeders para el resto de las tablas,
+| decidí no incluirlos para que se pudiera comprobar la funcionalidad
+| de los CRUD.
+| Los usuarios creados en el Seeder de Usuario son:
+|
+| ADMINISTRADOR
+| Correo: correo@gmail.com
+| Contraseña: password
+|
+| USUARIO
+| Correo: mail@gmail.com
+| Contraseña: password
+|
+| Para el administrador, se puede acceder a las pantallas de los CRUDs
+| dando clic en el nombre de usuario en la esquina superior derecha.
+| Ahí se tiene acceso a las tablas básicas para la implementación del sistema.
+|
+| El Usuario solo podrá reservar habitaciones.
+|
+| Para probar el sistema, se deben generar registros en las sig. tablas
+| en el sig. orden:
+|
+| - Pais
+| - Hotel
+| - TipoHabitacion
+| - Habitacion
+|
+| Una vez creados los registros, se puede ir a la PORTADA (en la esquina
+| superior izquierda) para poder definir las fechas de checkIn y checkOut y así,
+| empezar a buscar habitaciones para reservar.
+|
+| El carrito del usuario estará en la misma zona que el panel de los CRUDs.
+|
+| Para llevar a cabo la reserva, se debe ir al carrito y presionar el botón de
+| "Realizar Reserva"
+|
+| Todas las habitaciones reservadas aparecerán en la sección "Tus Reservas"
+|
+*/
+
+/*
+|--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 |
