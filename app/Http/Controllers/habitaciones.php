@@ -46,6 +46,11 @@ class habitaciones extends Controller
                 'paises.nombre AS paisNombre'
             )
             ->where('habitaciones.deleted_at','=',null)
+            ->whereNotIn('habitaciones.id',function($q){
+                $q->select('idHabitacion')
+                ->from('carritoHabitaciones')
+                ->where('carritoHabitaciones.deleted_at','=',null);
+            })
             ->get();
             return view('VistasHabitaciones.muestraHabitaciones')->with('habitaciones',$d);
         }

@@ -4,7 +4,7 @@
     <h2>Hoteles</h2>
 
     @if(Auth::user()->rol == 'Administrador')
-        <button class = "btn waves-effect waves-teal amber z-depth-1">  
+        <button class = "btn waves-effect waves-teal purple accent-1 z-depth-1">  
             <a href="/hoteles/create">Nuevo Hotel</a>
         </button></td>
     @endif
@@ -12,7 +12,7 @@
     @if(!is_null($hoteles))
         @foreach ($hoteles as $hotel)  
             <div class = "row">  
-                <div class = "col s10 m10 l10 light-green darken-3 white-text">  
+                <div class = "col s10 m10 l10 red accent-1 black-text">  
                     <p>[{{$hotel->hotelEstrellas}} estrellas] {{$hotel->hotelNombre}}</p>
                     <p>[{{$hotel->hotelCheckIn}} - {{$hotel->hotelCheckOut}}]</p>
                     <p>{{$hotel->direccionCalle}}, {{$hotel->direccionNumero}} [{{$hotel->direccionCodigoPostal}}]</p>
@@ -21,10 +21,10 @@
                         <form action="hoteles/{{$hotel->hotelId}}" method="POST" class = "col s12"> 
                         @csrf
                             <input type="hidden" name="_method" value="delete">
-                            <button class = "btn waves-effect waves-teal amber z-depth-1">  
+                            <button class = "btn waves-effect waves-teal orange accent-1 black-text z-depth-1">  
                                 <a href="/hoteles/{{$hotel->hotelId}}/edit">Edita</a>
                             </button></td>  
-                            <button class = "btn waves-effect waves-teal amber z-depth-1" type="submit" name="action">
+                            <button class = "btn waves-effect waves-teal orange accent-1 black-text z-depth-1" type="submit" name="action">
                                 Borrar
                             </button></td>  
                         </form>

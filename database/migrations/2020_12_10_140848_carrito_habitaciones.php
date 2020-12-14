@@ -14,6 +14,7 @@ class CarritoHabitaciones extends Migration
     public function up()
     {
         Schema::create('carritoHabitaciones', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('idUsuario')->constrained('users')->onDelete('cascade');
             $table->foreignId('idHabitacion')->constrained('habitaciones')->onDelete('cascade');
             $table->softDeletes();

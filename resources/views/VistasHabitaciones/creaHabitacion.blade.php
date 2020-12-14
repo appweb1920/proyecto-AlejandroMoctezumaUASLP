@@ -41,7 +41,7 @@
             </div>
 
             <div class="row">
-                <button class="btn waves-effect waves-light amber" type="submit" name="action">Submit
+                <button class="btn waves-effect waves-light purple accent-1" type="submit" name="action">Submit
                     <i class="material-icons right">cloud</i>
                 </button>
             </div>

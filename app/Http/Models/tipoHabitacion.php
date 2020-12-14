@@ -9,5 +9,5 @@ class tipoHabitacion extends Model
 {
     use SoftDeletes;
     protected $table="tipoHabitaciones";
-    protected $fillable=['nombre','caracteristicas','imagen01','imagen02','imagen03'];
+    protected $fillable=['nombre','caracteristicas'];
 }

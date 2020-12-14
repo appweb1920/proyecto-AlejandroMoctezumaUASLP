@@ -17,9 +17,6 @@ class TipoHabitacion extends Migration
             $table->id();
             $table->string('nombre', 100);
             $table->string('caracteristicas', 200);
-            $table->string('imagen01', 100);
-            $table->string('imagen02', 100);
-            $table->string('imagen03', 100);
             $table->softDeletes();
             $table->timestamps();
         });
